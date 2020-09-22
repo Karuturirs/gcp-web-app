@@ -13,6 +13,9 @@
         <module>service</module>
     </modules>
 
+    <properties>
+        <java.version>1.11</java.version>
+    </properties>
     <dependencyManagement>
         <dependencies>
 
