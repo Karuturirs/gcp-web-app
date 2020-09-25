@@ -1,0 +1,95 @@
+management:
+  endpoint:
+    metrics:
+      enabled: true
+  health:
+    probes:
+      enabled: true
+  web:
+    exposure:
+      include: 'health,info,refresh,env,readiness,liveness,metrics'
+server:
+  max-http-header-size: 40KB
+  servlet:
+    contextPath: /gcp-web-app
+  shutdown: graceful
+  undertow:
+    accesslog:
+      dir: /dev
+      enabled: true
+      pattern: >-
+        {"logType":"accessLog","IP":"%a","TR":"%t","RT":%D,"TID":"%I","MT":"%m","URI":"%U","QS":"%q","HV":"%H","RC":%s,"RS":%B,"REF":"%{i,Referer}","UA":"%{i,User-agent}","SETCK":"%{o,Set-Cookie}","CK":"%{i,Cookie}","RID":"%{i,RequestId}","CID":"%{i,ClientId}","TCIP":"%{i,True-Client-IP}","X_B3_TRACE_ID":"%{i,X-B3-TraceId}","Accept":"%{i,Accept}","CT":"%{o,Content-Type}"}
+      prefix: stdout
+      rotate: false
+      suffix: null
+    threads:
+      worker: 200
+spring:
+  application:
+    name: gcp-web-app
+  cloud:
+    gcp:
+      core:
+        enabled: true
+      trace:
+        enabled: true
+  lifecycle:
+    timeout-per-shutdown-phase: 20s
+  profiles:
+    active: 'default'
+  sleuth:
+    sampler:
+      probability: 1
+  web:
+    skipPattern: (^cleanup.*|.+favicon.*)
+springdoc:
+  api-docs:
+    enabled: true
+    path: /api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+    url: /gcp-web-app/api-docs
+undertow:
+  accesslog:
+    responseTime:
+      enable: true
+  allow:
+    unescaped:
+      characters:
+        in:
+          url: true
+  channel:
+    max:
+      concurent:
+        request:
+          connection: 100
+  decode:
+    url: true
+  server:
+    maxHeaderSize: 16384
+  socket:
+    tcpNodelay: true
+
+
+---
+
+spring:
+  cloud:
+    gcp:
+      core:
+        enabled: false
+      trace:
+        enabled: false
+  profiles:
+    active: 'dev'
+
+---
+spring:
+  cloud:
+    gcp:
+      project-id: gcp-demo-prod
+  profiles:
+    active: 'prod'
+
+

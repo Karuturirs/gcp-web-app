@@ -1,5 +1,5 @@
 # Java
-target
+*/target
 *.class
 
 # Eclipse
@@ -11,3 +11,5 @@ target
 .idea/
 *.iml
 *.iws
+
+*/.DS_Store

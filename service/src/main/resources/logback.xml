@@ -1,0 +1,71 @@
+<configuration>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+    <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>
+                %d{dd-MM-yyyy HH:mm:ss.SSS} %magenta([%thread]) %highlight(%-5level) %logger{36}.%M - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+
+    <appender name="std_json" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <!-- Assign logger fields to JSON object -->
+                <pattern>
+                    <pattern>
+                        {
+                        "time": "%date{ISO8601}",
+                        "severity": "%level",
+                        "message": "%message",
+                        "RID": "%X{RequestId}",
+                        "CID": "%X{ClientId}",
+                        "TID": "%thread",
+                        "TRID": "%X{X-B3-TraceId}",
+                        "SPID": "%X{X-B3-SpanId}",
+                        "CN": "%logger",
+                        "exceptionName": "%replace(%ex{1}){'[(:)(\n)].*', ''}",
+                        "rootCauseExceptionName": "%replace(%rEx{1}){'[(:)(\n)].*', ''}"
+                        }
+                    </pattern>
+                </pattern>
+                <!-- Log all StructuredArgument instances -->
+                <arguments/>
+                <!-- Log all MDC fields except the ones from Sleuth - we add them below
+                     under cleaned up names -->
+                <mdc>
+                    <excludeMdcKeyName>X-B3-TraceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-SpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-B3-ParentSpanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>X-Span-Export</excludeMdcKeyName>
+                    <excludeMdcKeyName>RequestId</excludeMdcKeyName>
+                    <excludeMdcKeyName>ClientId</excludeMdcKeyName>
+                    <excludeMdcKeyName>traceId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanId</excludeMdcKeyName>
+                    <excludeMdcKeyName>parentId</excludeMdcKeyName>
+                    <excludeMdcKeyName>spanExportable</excludeMdcKeyName>
+                </mdc>
+                <!-- Include Exception stack traces -->
+                <stackTrace/>
+                <!--<timestamp/>-->
+            </providers>
+        </encoder>
+    </appender>
+    <springProfile name="int | perf | prod | default">
+        <include resource="org/springframework/cloud/gcp/logging/logback-json-appender.xml"/>
+        <root level="INFO">
+            <appender-ref ref="std_json"/>
+        </root>
+    </springProfile>
+
+    <springProfile name="dev">
+        <root level="INFO">
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+
+</configuration>
