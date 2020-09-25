@@ -31,12 +31,11 @@ spring:
     gcp:
       core:
         enabled: true
+      project-id: gcp-demo-test
       trace:
         enabled: true
   lifecycle:
     timeout-per-shutdown-phase: 20s
-  profiles:
-    active: 'default'
   sleuth:
     sampler:
       probability: 1
@@ -71,9 +70,7 @@ undertow:
   socket:
     tcpNodelay: true
 
-
 ---
-
 spring:
   cloud:
     gcp:
@@ -81,15 +78,11 @@ spring:
         enabled: false
       trace:
         enabled: false
-  profiles:
-    active: 'dev'
+  profiles: dev
 
 ---
 spring:
   cloud:
     gcp:
       project-id: gcp-demo-prod
-  profiles:
-    active: 'prod'
-
-
+  profiles: prod
