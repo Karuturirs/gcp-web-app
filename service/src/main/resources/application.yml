@@ -1,29 +1,33 @@
 management:
-  endpoint:
-    metrics:
-      enabled: true
-  health:
-    probes:
-      enabled: true
+ endpoints:
+  info:
+   enabled: true
+  metrics:
+   enabled: true
+  prometheus:
+   enabled: true
   web:
-    exposure:
-      include: 'health,info,refresh,env,readiness,liveness,metrics'
+   exposure:
+    include: 'health,info,prometheus,refresh,env,readiness,liveness,metrics'
+ health:
+  probes:
+   enabled: true
 server:
-  max-http-header-size: 40KB
-  servlet:
-    contextPath: /gcp-web-app
-  shutdown: graceful
-  undertow:
-    accesslog:
-      dir: /dev
-      enabled: true
-      pattern: >-
+ max-http-header-size: 40KB
+ servlet:
+  contextPath: /gcp-web-app
+ shutdown: graceful
+ undertow:
+  accesslog:
+   dir: /dev
+   enabled: true
+   pattern: >-
         {"logType":"accessLog","IP":"%a","TR":"%t","RT":%D,"TID":"%I","MT":"%m","URI":"%U","QS":"%q","HV":"%H","RC":%s,"RS":%B,"REF":"%{i,Referer}","UA":"%{i,User-agent}","SETCK":"%{o,Set-Cookie}","CK":"%{i,Cookie}","RID":"%{i,RequestId}","CID":"%{i,ClientId}","TCIP":"%{i,True-Client-IP}","X_B3_TRACE_ID":"%{i,X-B3-TraceId}","Accept":"%{i,Accept}","CT":"%{o,Content-Type}"}
-      prefix: stdout
-      rotate: false
-      suffix: null
-    threads:
-      worker: 200
+   prefix: stdout
+   rotate: false
+   suffix: null
+   threads:
+    worker: 200
 spring:
   application:
     name: gcp-web-app
