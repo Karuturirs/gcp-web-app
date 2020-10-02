@@ -16,7 +16,9 @@ public class BookController {
 
 
     @GetMapping("/{id}")
-    public String findById(@PathVariable long id) {
+    public String findById(@PathVariable long id) throws InterruptedException {
+
+        Thread.sleep(1000);
         return "Book::" + id;
     }
 

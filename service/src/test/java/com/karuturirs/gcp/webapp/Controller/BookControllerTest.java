@@ -21,7 +21,7 @@ public class BookControllerTest {
     }
 
     @Test
-    public void findByIdTest(){
+    public void findByIdTest() throws InterruptedException {
 
         Assertions.assertEquals(bookController.findById(1L), "Book::1");
     }
