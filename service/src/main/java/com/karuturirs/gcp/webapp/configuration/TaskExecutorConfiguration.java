@@ -17,14 +17,14 @@ public class TaskExecutorConfiguration {
     @Autowired
     private BeanFactory beanFactory;
 
-    @Bean
+    @Bean(name = "abcd")
     public Executor citrusTaskExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         executor.setCorePoolSize(10);
-        executor.setMaxPoolSize(20);
-        executor.setQueueCapacity(5);
+        executor.setMaxPoolSize(1000);
+        executor.setQueueCapacity(0);
         executor.setThreadNamePrefix("KeyGenerator");
-        executor.setTaskDecorator(new MDCAsychTaskExecutorStrategy());
+        //executor.setTaskDecorator(new MDCAsychTaskExecutorStrategy());
         executor.initialize();
         return new LazyTraceExecutor(beanFactory, executor);
     }
