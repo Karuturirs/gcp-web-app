@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 public class KeysServiceImpl implements KeysService {
@@ -31,11 +32,33 @@ public class KeysServiceImpl implements KeysService {
                         Collectors.toMap(
                                 i -> common.randomKey(5), i -> common.randomWord(20))
                 );*/
+
+
         try {
-            Map<CompletableFuture<String>, CompletableFuture<String>> keyMap = new HashMap<>();
+           /* Map<CompletableFuture<String>, CompletableFuture<String>> keyMap = new HashMap<>();
             for (int i = 1; i <= count; i++) {
                 keyMap.put(common.randomKey(5), common.randomWord(20));
-            }
+            }*/
+            Map<CompletableFuture<String>, CompletableFuture<String>> keyMap = IntStream.range(1, count).boxed()
+                    .collect(
+                            Collectors.toMap(
+                                    i -> {
+                                        try {
+                                            return common.randomKey(5);
+                                        }catch(Exception e){
+                                            logger.error("error:",e);
+                                        }
+                                        return  null;
+                                    }, i -> {
+                                        try {
+                                            return common.randomWord(20);
+                                        }catch(Exception e){
+                                            logger.error("error:",e);
+                                        }
+                                        return  null;
+
+                                    })
+                    );
             keyMap.forEach((k, v) -> {
                 try {
                     keys.addKey(k.get(), v.get());
